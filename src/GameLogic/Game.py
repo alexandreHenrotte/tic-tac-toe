@@ -1,9 +1,13 @@
+import pygame
+from GameLogic import GameColors
+
 
 class Game:
 
-    def __init__(self, board, players):
+    def __init__(self, board, game_information, players):
         self.running = False
         self.board = board
+        self.game_information = game_information
         self.players = players
         self.current_player = self.players[0]
         self.winner = None
@@ -21,13 +25,27 @@ class Game:
         return self.winner is not None
 
     def show_winner(self):
-        print("Winner is : ", self.current_player.name)
+        self.game_information.append_line(
+            {
+                "text": f"{self.winner.name.upper()} HAS WIN !",
+                "color": self.winner.marker.color,
+                "position": (self.game_information.x_start, self.game_information.y_start + 300)
+            }
+        )
+        print("winner")
 
     def is_draw(self):
         if self.board.is_full_of_markers() and self.winner == None:
             return True
 
     def draw_scenario(self):
+        self.game_information.append_line(
+            {
+                "text": f"IT'S A DRAW !",
+                "color": GameColors.BLACK,
+                "position": (self.game_information.x_start, self.game_information.y_start + 300)
+            }
+        )
         print("It's a draw")
 
 
@@ -107,8 +125,6 @@ class Game:
                 return False
 
         return True
-
-
 
     def next_player_turn(self):
         current_player_index = self.players.index(self.current_player)

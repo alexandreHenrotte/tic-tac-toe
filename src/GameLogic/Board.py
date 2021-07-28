@@ -1,3 +1,4 @@
+import pygame
 from GameLogic import GameColors
 from GameLogic.Square import Square
 
@@ -48,6 +49,15 @@ class Board:
                     return False
         
         return True
+
+    def write_text(self, text):
+        fontname = 'comicsansbold'
+        fontsize = 30
+        font = pygame.font.SysFont(fontname, fontsize)
+        # apply it to text on a label
+        label = font.render(text, 1, (0, 0, 0))
+        # put the label object on the screen at point x=450, y=300
+        self.screen.blit(label, (450, 300))
 
     def get_size(self):
         height = self.nb_rows * self.square_size

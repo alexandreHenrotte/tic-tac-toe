@@ -1,13 +1,13 @@
 import pygame
 import pygame_menu
+import time
 from GameLogic.Game import Game
 from GameLogic.Board import Board
+from GameLogic.GameInformation import GameInformation
 from GameLogic.Player import Player
 from GameLogic.Markers.CrossMarker import CrossMarker
 from  GameLogic.Markers.CircleMarker import CircleMarker
 from GameLogic import GameColors
-from ResultScreen.WinScreen import WinScreen
-from ResultScreen.DrawScreen import DrawScreen
 
 
 class MainMenu (pygame_menu.Menu):
@@ -21,20 +21,38 @@ class MainMenu (pygame_menu.Menu):
 
     def start_game(self):
         board = Board()
+        game_information = GameInformation()
+
         board.assign_screen(self.application.screen)
+        game_information.assign_screen(self.application.screen)
 
         player1 = Player("Player 1")
         player2 = Player("Player 2")
+        players = [player1, player2]
 
         cross = CrossMarker(player1, GameColors.RED)
         circle = CircleMarker(player2, GameColors.BLUE)
 
         player1.assign_marker(cross)
         player2.assign_marker(circle)
+        
+        game_information.set_lines(
+        [
+            {
+                "text": players[0].name,
+                "color": players[0].marker.color,
+                "position": (game_information.x_start, game_information.y_start)
+            },
+            {
+                "text": players[1].name,
+                "color": players[1].marker.color,
+                "position": (game_information.x_start, game_information.y_start + 40)
+            }
+        ])
 
-        game = Game(board, [player1, player2])
+        game = Game(board, game_information, players)
 
-
+    
         game.start()
         while game.running:
             # User key events
@@ -56,13 +74,9 @@ class MainMenu (pygame_menu.Menu):
 
                         if game.has_winner():
                             game.show_winner()
-                            game.stop()
-                            WinScreen(self, game.winner).mainloop(self.application.screen)
 
                         elif game.is_draw():
                             game.draw_scenario()
-                            game.stop()
-                            DrawScreen(self).mainloop(self.application.screen)
 
                         else:
                             game.next_player_turn()
@@ -70,5 +84,12 @@ class MainMenu (pygame_menu.Menu):
             # Draw board and players markers
             game.board.draw_board_and_markers(game.players)
 
+            # Draw game information
+            game.game_information.draw()
+
             # Update screen
             pygame.display.update()
+
+            if game.has_winner() or game.is_draw():
+                time.sleep(3)
+                game.stop()

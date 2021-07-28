@@ -13,6 +13,7 @@ class Application:
         
     def run(self):
         pygame.init()
+        pygame.font.init()
         pygame.display.set_caption(self.WINDOW_TITLE)
 
         self.running = True
