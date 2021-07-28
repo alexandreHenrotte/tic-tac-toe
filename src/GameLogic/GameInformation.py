@@ -10,7 +10,7 @@ class GameInformation:
         self.x_end = 875
         self.y_start = 25
         self.y_end = 575
-        self.font = pygame.font.SysFont("comicsansbold", 30)
+        self.font = pygame.font.SysFont("Arial, couriernewm", 26)
         self.lines = []
     
     def draw(self):
@@ -18,7 +18,7 @@ class GameInformation:
             label_line = self.font.render(line["text"], 1, line["color"])
             self.screen.blit(label_line, line["position"])
         
-    def set_font(self, fontname="comicsansbold", fontsize=30):
+    def set_font(self, fontname="Arial, couriernewm", fontsize=26):
         self.font = pygame.font.SysFont(fontname, fontsize)
     
     def set_lines(self, lines):
